@@ -29,7 +29,7 @@ def index5 ():
         eps         = body[0]['eps']
         min_samples = body[0]['min_samples']     
 
-        total_data = dbscan_model(eps, min_samples, query)
+        total_data = dbscan_model(int(eps), int(min_samples), query)
         return (total_data)
 
     if request.method == 'GET':
