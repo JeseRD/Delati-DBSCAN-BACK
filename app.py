@@ -5,7 +5,7 @@ from main import metodo_codo,dbscan_model
 app= Flask(__name__)
 CORS(app)
 PORT= 5000
-DEBUG=False
+DEBUG=True
 
 @app.route('/', methods=['GET'])
 def index ():

@@ -35,11 +35,22 @@ def metodo_codo(dataTransformed):
     sorted_distances=sorting_distances[:,1]
     return sorted_distances
 
-#grafico entre distancia vs épsilon
-#plt.plot(sorted_distances)
-#plt.xlabel('Distancia')
-#plt.ylabel('Epsilon')
-#plt.show()
+def show_codo(data):
+    codo=metodo_codo(data)
+    #grafico entre distancia vs épsilon
+    plt.plot(codo)
+    plt.xlabel('Distancia')
+    plt.ylabel('Epsilon')
+    plt.title("GRÁFICO MÉTODO DEL CODO")
+    plt.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.6)
+    #plt.show()
+
+    codo_image = io.BytesIO()
+    plt.savefig(codo_image, format='jpg')
+    codo_image.seek(0)
+    codo_image_decode = base64.b64encode(codo_image.read())
+
+    return codo_image_decode.decode()
 
 def dbscan_model(eps, min_samples, query):
     result = {}
@@ -50,7 +61,7 @@ def dbscan_model(eps, min_samples, query):
     # inicializamos DBSCAN
     clustering_model=DBSCAN(eps=eps,min_samples=min_samples)
     # ajustamos el modelo a transform_data
-    clustering_model.fit(dataTransformed)
+    clustering_model.fit_predict(dataTransformed)
     predicted_labels=clustering_model.labels_
 
     data['cluster'] = predicted_labels
@@ -73,20 +84,22 @@ def dbscan_model(eps, min_samples, query):
 
     clusters = dataTransformed['cluster'].apply(lambda x: 'cluster ' +str(x+1) if x != -1 else 'outlier')
     numero_clusters= len(set(clusters))
+    print(numero_clusters)
     XX=dataTransformed.iloc[:,[0,1]].values
-    plt.figure(figsize=(15,10))
 
+    plt.figure(figsize=(13,10))
     for i in range(numero_clusters):
         if (i-1) != -1:
-            plt.scatter(XX[clustering_model== (i-1), 0], XX[clustering_model==(i-1), 1], s=80, cmap='Paired', label = clusters.unique())
+            plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, cmap='Paired', label = clusters.unique())
         else:
-            plt.scatter(XX[clustering_model== (i-1), 0], XX[clustering_model==(i-1), 1], s=80, c='Grey', label = clusters.unique())
+            plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, c='Grey', label = clusters.unique())
 
-    plt.legend(clusters.unique(),bbox_to_anchor=(1.05,1),fontsize=25)
+    plt.legend(clusters.unique(),bbox_to_anchor=(0.99,1),fontsize=12)
     plt.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.6)
     plt.xlabel('Categoria')
     plt.ylabel('Datos')
     plt.title("DBSCAN")
+    #plt.show()
  
     ##############
     
@@ -97,20 +110,8 @@ def dbscan_model(eps, min_samples, query):
     my_base64_jpgData = base64.b64encode(my_stringIObytes.read())
     result["graphic_dbscan"] = my_base64_jpgData.decode()
 
-
-    codo=metodo_codo(dataTransformed)
-    #grafico entre distancia vs épsilon
-    plt.plot(codo)
-    plt.xlabel('Distancia')
-    plt.ylabel('Epsilon')
-    plt.title("GRÁFICO MÉTODO DEL CODO")
-    plt.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.6)
-
-    codo_image = io.BytesIO()
-    plt.savefig(codo_image, format='jpg')
-    codo_image.seek(0)
-    codo_image_decode = base64.b64encode(codo_image.read())
-    result["graphic_method_codo"] = codo_image_decode.decode()
+    plt.figure(clear=True) 
+    result["graphic_method_codo"] = show_codo(dataTransformed)
 
     return result
 
