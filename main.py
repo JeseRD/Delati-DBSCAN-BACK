@@ -78,7 +78,7 @@ def dbscan_model(eps, min_samples, query):
         cantidad_cluster = {
             "clusters": item,
             "cantidad": cant.count(item),
-            "porcentaje": cant.count(item)/len(cant)   
+            "porcentaje": float(cant.count(item)/len(cant))   
                  }
         metricas_totales.append(cantidad_cluster)
 
