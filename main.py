@@ -77,17 +77,17 @@ def dbscan_model(eps, min_samples, query):
     cantidad_cluster = {}
     for item in clusters_uniques:
         cantidad_cluster = {
-            "clusters": item,
-            "cantidad": cant.count(item),
-            "porcentaje": float(cant.count(item)/len(cant))   
+            "clusters": int(item),
+            "cantidad": cant.count(int(item)),
+            "porcentaje": float(cant.count(int(item))/len(cant))   
                  }
         metricas_totales.append(cantidad_cluster)
 
     result['data'] = json.loads(data.to_json(orient = 'records'))
     result['metricas'] = { 
                 'n_clusters': n_clusters_,
-                 'n_noise': n_noise_,
-                 'Coefficient': coefficient
+                'n_noise': n_noise_,
+                'Coefficient': coefficient
                  }
 
     ##############visualizacion de DBSCAN ##################
