@@ -113,6 +113,8 @@ def dbscan_model(eps, min_samples, query):
     plt.figure(clear=True) 
     result["graphic_method_codo"] = show_codo(dataTransformed)
 
+    result["numColumn"] = list(data.columns.values)
+
     return result
 
 
