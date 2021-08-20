@@ -71,11 +71,23 @@ def dbscan_model(eps, min_samples, query):
     n_noise_    = list(predicted_labels).count(-1)
     coefficient = metrics.silhouette_score(dataTransformed, predicted_labels)
 
+    clusters_uniques = set(list(predicted_labels))
+    cant = list(predicted_labels)
+    metricas_totales = []
+    for item in clusters_uniques:
+        cantidad_cluster = {
+            "clusters": item,
+            "cantidad": cant.count(item),
+            "porcentaje": cant.count(item)/len(cant)   
+                 }
+        metricas_totales.append(cantidad_cluster)
+
     result['data'] = json.loads(data.to_json(orient = 'records'))
     result['metricas'] = { 
                 'n_clusters': n_clusters_,
                  'n_noise': n_noise_,
-                 'Coefficient': coefficient}
+                 'Coefficient': coefficient,
+                 'detalles': metricas_totales}
 
     ##############visualizacion de DBSCAN ##################
 #visualzing clusters
@@ -114,6 +126,8 @@ def dbscan_model(eps, min_samples, query):
     result["graphic_method_codo"] = show_codo(dataTransformed)
 
     result["numColumn"] = list(data.columns.values)
+
+    
 
     return result
 
