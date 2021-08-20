@@ -74,6 +74,7 @@ def dbscan_model(eps, min_samples, query):
     clusters_uniques = set(list(predicted_labels))
     cant = list(predicted_labels)
     metricas_totales = []
+    cantidad_cluster = {}
     for item in clusters_uniques:
         cantidad_cluster = {
             "clusters": item,
@@ -86,8 +87,8 @@ def dbscan_model(eps, min_samples, query):
     result['metricas'] = { 
                 'n_clusters': n_clusters_,
                  'n_noise': n_noise_,
-                 'Coefficient': coefficient,
-                 'detalles': metricas_totales}
+                 'Coefficient': coefficient
+                 }
 
     ##############visualizacion de DBSCAN ##################
 #visualzing clusters
@@ -126,6 +127,8 @@ def dbscan_model(eps, min_samples, query):
     result["graphic_method_codo"] = show_codo(dataTransformed)
 
     result["numColumn"] = list(data.columns.values)
+
+    result["metricas_detalles"] = metricas_totales
 
     
 
