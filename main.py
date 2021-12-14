@@ -9,11 +9,12 @@ from sklearn.cluster import DBSCAN
 from matplotlib import pyplot as plt
 from sklearn.neighbors import NearestNeighbors
 
-conn= psycopg2.connect(database="delati", user="modulo4", password="modulo4", host="128.199.1.222", port="5432")
+conn= psycopg2.connect(database="giinwedb", user="modulo4", password="modulo4", host="128.199.1.222", port="5432")
 
 
 def get_dataFrame(sql, conn):
-    df = pd.read_sql(sql, con = conn)
+    df = pd.read_sql_query(sql, con = conn)
+    #print(df)
     return df
 
 def transform_data(dat):
@@ -54,8 +55,17 @@ def show_codo(data):
 
 def dbscan_model(eps, min_samples, query):
     result = {}
+
     #TODO: Obtener data desde la query
     data=get_dataFrame(query, conn)
+    
+    #cur = conn.cursor()
+    #cur.execute(query)
+    #tuplas = pd.DataFrame(cur.fetchall(),columns = list(data.columns.values))
+    #cur.close()
+    
+    
+
     #TODO: transformamos la data
     dataTransformed = transform_data(data)
     # inicializamos DBSCAN
@@ -65,6 +75,7 @@ def dbscan_model(eps, min_samples, query):
     predicted_labels=clustering_model.labels_
 
     data['cluster'] = predicted_labels
+    #print(data['cluster'])
 
     ########metrics and number of clusters####################
     n_clusters_ = len(set(predicted_labels)) - (1 if -1 in predicted_labels else 0)
@@ -83,7 +94,14 @@ def dbscan_model(eps, min_samples, query):
                  }
         metricas_totales.append(cantidad_cluster)
 
-    result['data'] = json.loads(data.to_json(orient = 'records'))
+    #result['data'] = tuplas
+    #console.log(tuplas)
+    #print(json.loads(data.to_json(orient = 'records')))
+
+    result['data'] = json.loads(data.to_json(orient = 'values'))
+    #result['data'] = list(data.values)
+    #print(result['data'])
+
     result['metricas'] = { 
                 'n_clusters': n_clusters_,
                 'n_noise': n_noise_,
@@ -97,7 +115,7 @@ def dbscan_model(eps, min_samples, query):
 
     clusters = dataTransformed['cluster'].apply(lambda x: 'cluster ' +str(x+1) if x != -1 else 'outlier')
     numero_clusters= len(set(clusters))
-    print(numero_clusters)
+    ##print(numero_clusters)
     XX=dataTransformed.iloc[:,[0,1]].values
 
     plt.figure(figsize=(13,10))
@@ -127,10 +145,13 @@ def dbscan_model(eps, min_samples, query):
     result["graphic_method_codo"] = show_codo(dataTransformed)
 
     result["numColumn"] = list(data.columns.values)
-
+    #print("cabecera", list(data.columns.values))
     result["metricas_detalles"] = metricas_totales
 
+    #print("Este es mi otro comentario", result)
     
+    print("colum", result['numColumn'])
+    print(result['data'])
 
     return result
 
