@@ -98,7 +98,7 @@ def dbscan_model(eps, min_samples, query):
     #console.log(tuplas)
     #print(json.loads(data.to_json(orient = 'records')))
 
-    result['data'] = json.loads(data.to_json(orient = 'values'))
+    result['data'] = json.loads(data.to_json(orient = 'records'))#'values'
     #result['data'] = list(data.values)
     #print(result['data'])
 
