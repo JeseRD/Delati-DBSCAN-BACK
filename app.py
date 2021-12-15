@@ -39,4 +39,5 @@ def index5 ():
         return total_data
 
 if __name__=="__main__":
-    app.run(port=PORT, debug=DEBUG)
+    app.run(debug=True)
+    #app.run(port=PORT, debug=DEBUG)
