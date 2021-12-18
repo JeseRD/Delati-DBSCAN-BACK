@@ -64,7 +64,6 @@ def dbscan_model(eps, min_samples, query):
     #tuplas = pd.DataFrame(cur.fetchall(),columns = list(data.columns.values))
     #cur.close()
     
-    
 
     #TODO: transformamos la data
     dataTransformed = transform_data(data)
