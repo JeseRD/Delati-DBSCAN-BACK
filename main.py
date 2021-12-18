@@ -77,8 +77,8 @@ def dbscan_model(eps, min_samples, query):
     #print(data['cluster'])
 
     ########metrics and number of clusters####################
-    n_clusters_ = len(set(predicted_labels)) - (1 if -1 in predicted_labels else 0)
-    n_noise_    = list(predicted_labels).count(-1)
+    n_clusters_ = len(set(predicted_labels)) 
+    n_noise_    = list(predicted_labels).count(0)
     coefficient = metrics.silhouette_score(dataTransformed, predicted_labels)
 
     clusters_uniques = set(list(predicted_labels))
@@ -95,7 +95,7 @@ def dbscan_model(eps, min_samples, query):
             metricas_totales.append(cantidad_cluster)
         else:
             cantidad_cluster = {
-                "clusters": 0,
+                "clusters": int(item),
                 "cantidad": cant.count(int(item)),
                 "porcentaje": 0.0   
                     }
@@ -120,22 +120,19 @@ def dbscan_model(eps, min_samples, query):
 
     dataTransformed['cluster']=predicted_labels
 
-    clusters = dataTransformed['cluster'].apply(lambda x: 'cluster ' +str(x+1) if x != -1 else 'outlier')
+    clusters = dataTransformed['cluster'].apply(lambda x: 'cluster ' +str(x+1) if x != 0 else 'outlier')
     numero_clusters= len(set(clusters))
     ##print(numero_clusters)
     XX=dataTransformed.iloc[:,[0,1]].values
 
     plt.figure(figsize=(13,10))
 
-    if(numero_clusters <= 0):
-        plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, c='Grey', label = clusters.unique())        
-    else:
-        for i in range(numero_clusters):
-            if (i-1) != -1:
-                plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, cmap='Paired', label = clusters.unique())
-            else:
-                plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, c='Grey', label = clusters.unique())
     
+    for i in range(numero_clusters):
+        if (i-1) != 0:
+            plt.scatter(XX[predicted_labels== (i), 0], XX[predicted_labels==(i), 1], s=80, cmap='Paired', label = clusters.unique())
+        else:
+            plt.scatter(XX[predicted_labels== (i), 0], XX[predicted_labels==(i), 1], s=80, c='Grey', label = clusters.unique())
 
 
     plt.legend(clusters.unique(),bbox_to_anchor=(0.99,1),fontsize=12)
