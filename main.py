@@ -127,12 +127,15 @@ def dbscan_model(eps, min_samples, query):
 
     plt.figure(figsize=(13,10))
 
+    if(numero_clusters == 0):
+        plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, c='Grey', label = clusters.unique())        
+    else:
+        for i in range(numero_clusters):
+            if (i-1) != -1:
+                plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, cmap='Paired', label = clusters.unique())
+            else:
+                plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, c='Grey', label = clusters.unique())
     
-    for i in range(numero_clusters):
-        if (i-1) != -1:
-            plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, cmap='Paired', label = clusters.unique())
-        else:
-            plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, c='Grey', label = clusters.unique())
 
 
     plt.legend(clusters.unique(),bbox_to_anchor=(0.99,1),fontsize=12)
