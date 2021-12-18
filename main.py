@@ -95,7 +95,7 @@ def dbscan_model(eps, min_samples, query):
             metricas_totales.append(cantidad_cluster)
         else:
             cantidad_cluster = {
-                "clusters": int(item),
+                "clusters": 0,
                 "cantidad": cant.count(int(item)),
                 "porcentaje": 0.0   
                     }
@@ -127,7 +127,7 @@ def dbscan_model(eps, min_samples, query):
 
     plt.figure(figsize=(13,10))
 
-    if(numero_clusters == 0):
+    if(numero_clusters <= 0):
         plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, c='Grey', label = clusters.unique())        
     else:
         for i in range(numero_clusters):
