@@ -87,12 +87,20 @@ def dbscan_model(eps, min_samples, query):
     metricas_totales = []
     cantidad_cluster = {}
     for item in clusters_uniques:
-        cantidad_cluster = {
-            "clusters": int(item),
-            "cantidad": cant.count(int(item)),
-            "porcentaje": float(cant.count(int(item))/len(cant))   
-                 }
-        metricas_totales.append(cantidad_cluster)
+        if(cant.count(int(item))!=0):
+            cantidad_cluster = {
+                "clusters": int(item),
+                "cantidad": cant.count(int(item)),
+                "porcentaje": float(cant.count(int(item))/len(cant))   
+                    }
+            metricas_totales.append(cantidad_cluster)
+        else:
+            cantidad_cluster = {
+                "clusters": int(item),
+                "cantidad": cant.count(int(item)),
+                "porcentaje": 0   
+                    }
+            metricas_totales.append(cantidad_cluster)
 
     #result['data'] = tuplas
     #console.log(tuplas)
