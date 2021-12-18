@@ -135,7 +135,7 @@ def dbscan_model(eps, min_samples, query):
         else:
             plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, c='Grey', label = clusters.unique())
     except:
-        print("Eror")        
+        plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, c='Grey')      
 
 
 
