@@ -13,7 +13,7 @@ conn= psycopg2.connect(database="giinwedb", user="modulo4", password="modulo4", 
 
 
 def get_dataFrame(sql, conn):
-    df = pd.read_sql_query(sql, con = conn, chunksize=1000)
+    df = pd.read_sql_query(sql, con = conn, chunksize=500)
     #print(df)
     return df
 
