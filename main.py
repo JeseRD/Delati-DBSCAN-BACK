@@ -77,8 +77,8 @@ def dbscan_model(eps, min_samples, query):
     #print(data['cluster'])
 
     ########metrics and number of clusters####################
-    n_clusters_ = len(set(predicted_labels)) - (1 if -1 in predicted_labels else 0)
-    n_noise_    = list(predicted_labels).count(-1)
+    n_clusters = len(set(predicted_labels)) - (1 if -1 in predicted_labels else 0)
+    n_noise    = list(predicted_labels).count(-1)
     coefficient = metrics.silhouette_score(dataTransformed, predicted_labels)
 
     clusters_uniques = set(list(predicted_labels))
@@ -112,8 +112,8 @@ def dbscan_model(eps, min_samples, query):
     #print(result['data'])
 
     result['metricas'] = { 
-                'n_clusters': n_clusters_,
-                'n_noise': n_noise_,
+                'n_clusters': n_clusters,
+                'n_noise': n_noise,
                 'Coefficient': coefficient
                  }
 
