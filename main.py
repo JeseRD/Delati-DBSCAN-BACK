@@ -77,31 +77,29 @@ def dbscan_model(eps, min_samples, query):
     #print(data['cluster'])
 
     ########metrics and number of clusters####################
-    n_clusters = len(set(predicted_labels)) - (1 if -1 in predicted_labels else 0)
-    n_noise    = list(predicted_labels).count(-1)
+    n_clusters_ = len(set(predicted_labels)) - (1 if -1 in predicted_labels else 0)
+    n_noise_    = list(predicted_labels).count(-1)
     coefficient = metrics.silhouette_score(dataTransformed, predicted_labels)
 
     clusters_uniques = set(list(predicted_labels))
     cant = list(predicted_labels)
     metricas_totales = []
     cantidad_cluster = {}
-    if(len(cant) != 1):
-        for item in clusters_uniques:
-
-                cantidad_cluster = {
-                    "clusters": int(item),
-                    "cantidad": cant.count(int(item)),
-                    "porcentaje": float(cant.count(int(item))/len(cant))   
-                        }
-                metricas_totales.append(cantidad_cluster)
-    else:        
+    for item in clusters_uniques:
+        if(len(cant) != 0):
             cantidad_cluster = {
-                "clusters": 0,
-                "cantidad": 6000,
-                "porcentaje": 100.0   
-                        }
+                "clusters": int(item),
+                "cantidad": cant.count(int(item)),
+                "porcentaje": float(cant.count(int(item))/len(cant))   
+                    }
             metricas_totales.append(cantidad_cluster)
-
+        else:
+            cantidad_cluster = {
+                "clusters": int(item),
+                "cantidad": cant.count(int(item)),
+                "porcentaje": 0.0   
+                    }
+            metricas_totales.append(cantidad_cluster)
 
     #result['data'] = tuplas
     #console.log(tuplas)
@@ -112,8 +110,8 @@ def dbscan_model(eps, min_samples, query):
     #print(result['data'])
 
     result['metricas'] = { 
-                'n_clusters': n_clusters,
-                'n_noise': n_noise,
+                'n_clusters': n_clusters_,
+                'n_noise': n_noise_,
                 'Coefficient': coefficient
                  }
 
