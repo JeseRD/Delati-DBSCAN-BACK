@@ -85,7 +85,7 @@ def dbscan_model(eps, min_samples, query):
     cant = list(predicted_labels)
     metricas_totales = []
     cantidad_cluster = {}
-    if(len(cant) != 0):
+    if(len(cant) != 1):
         for item in clusters_uniques:
 
                 cantidad_cluster = {
