@@ -87,14 +87,15 @@ def dbscan_model(eps, min_samples, query):
     n_noise_porcentaje= 0.0
     for item in clusters_uniques:        
         if(len(cant) != 0):
-             if(item != -1):
+            if(item != -1):
+                porcentaje = round(float(cant.count(int(item))/len(cant)),5)
                 cantidad_cluster = {
                     "clusters": int(item),
                     "cantidad": cant.count(int(item)),
-                    "porcentaje": round(float(cant.count(int(item))/len(cant)),5)    
+                    "porcentaje": porcentaje    
                         }
                 metricas_totales.append(cantidad_cluster)
-             else:
+            else:
                  n_noise_porcentaje=round(float(cant.count(int(item))/len(cant)),5)
         else:
             cantidad_cluster = {
