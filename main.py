@@ -72,7 +72,7 @@ def dbscan_model(eps, min_samples, query):
     ########metrics and number of clusters####################
     n_clusters_ = len(set(predicted_labels)) - (1 if -1 in predicted_labels else 0)
     n_noise_    = list(predicted_labels).count(-1)    
-    
+    print("1")
     #2 <= n_labels <= n_samples - 1
     if((len(set(predicted_labels))> 1) and (len(set(predicted_labels))<= (min_samples - 1))):        
         coefficient = metrics.silhouette_score(dataTransformed, clustering_model.labels_ , sample_size=SILHOUETTE_SAMPLE_SIZE)
@@ -85,6 +85,7 @@ def dbscan_model(eps, min_samples, query):
     metricas_totales = []
     cantidad_cluster = {}
     n_noise_porcentaje= 0.0
+    print("2")
     for item in clusters_uniques:        
         if(len(cant) != 0):
             if(item != -1):
@@ -110,7 +111,7 @@ def dbscan_model(eps, min_samples, query):
     #result['data'] = tuplas
     #console.log(tuplas)
     #print(json.loads(data.to_json(orient = 'records')))
-
+    print("3")
     result['data'] = json.loads(data.to_json(orient = 'values'))#'values'
     #result['data'] = list(data.values)
     #print(result['data'])
