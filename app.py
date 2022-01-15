@@ -5,7 +5,7 @@ from main import metodo_codo,dbscan_model
 app= Flask(__name__)
 CORS(app)
 PORT= 5002
-#HOST='128.199.1.222'
+HOST='128.199.1.222'
 #HOST='127.0.0.1'
 #DEBUG=False
 DEBUG=True
@@ -42,6 +42,6 @@ def index5 ():
         #return total_data
 
 if __name__=="__main__":
-    app.run(debug=True)
+    #app.run(debug=True)
     #app.run(port=PORT, debug=DEBUG)
-    #app.run(host=HOST,port=PORT,debug=DEBUG)
+    app.run(host=HOST,port=PORT,debug=DEBUG)
