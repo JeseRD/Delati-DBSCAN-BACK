@@ -91,11 +91,11 @@ def dbscan_model(eps, min_samples, query):
                 cantidad_cluster = {
                     "clusters": int(item),
                     "cantidad": cant.count(int(item)),
-                    "porcentaje": "{:.5f}".format(float(cant.count(int(item))/len(cant)))    
+                    "porcentaje": "{0:.5f}".format(float(cant.count(int(item))/len(cant)))    
                         }
                 metricas_totales.append(cantidad_cluster)
              else:
-                 n_noise_porcentaje="{:.5f}".format(float(cant.count(int(item))/len(cant)))
+                 n_noise_porcentaje="{0:.5f}".format(float(cant.count(int(item))/len(cant)))
         else:
             cantidad_cluster = {
                 "clusters": int(item),
@@ -115,7 +115,7 @@ def dbscan_model(eps, min_samples, query):
     result['metricas'] = { 
                 'n_clusters': n_clusters_,
                 'n_noise': n_noise_,
-                'Coefficient': "{:.5f}".format(coefficient),
+                'Coefficient': "{0:.5f}".format(coefficient),
                 'n_noise_porcentaje': n_noise_porcentaje
                  }
 
