@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 from sklearn.neighbors import NearestNeighbors
 
 conn= psycopg2.connect(database="giinwedb", user="modulo4", password="modulo4", host="128.199.1.222", port="5432")
-
+SILHOUETTE_SAMPLE_SIZE=3000
 
 def get_dataFrame(sql, conn):
     df = pd.read_sql_query(sql, con = conn)
@@ -58,41 +58,44 @@ def dbscan_model(eps, min_samples, query):
 
     #TODO: Obtener data desde la query
     data=get_dataFrame(query, conn)
-    
-    #cur = conn.cursor()
-    #cur.execute(query)
-    #tuplas = pd.DataFrame(cur.fetchall(),columns = list(data.columns.values))
-    #cur.close()
-    
-
     #TODO: transformamos la data
-    dataTransformed = transform_data(data)
+    dataTransformed = transform_data(data)   
     # inicializamos DBSCAN
     clustering_model=DBSCAN(eps=eps,min_samples=min_samples)
     # ajustamos el modelo a transform_data
     clustering_model.fit_predict(dataTransformed)
-    predicted_labels=clustering_model.labels_
-
+    predicted_labels=clustering_model.labels_    
+    
     data['cluster'] = predicted_labels
-    #print(data['cluster'])
+    #print(data['cluster'])    
 
     ########metrics and number of clusters####################
     n_clusters_ = len(set(predicted_labels)) - (1 if -1 in predicted_labels else 0)
-    n_noise_    = list(predicted_labels).count(-1)
-    coefficient = metrics.silhouette_score(dataTransformed, predicted_labels)
-
+    n_noise_    = list(predicted_labels).count(-1)    
+    
+    #2 <= n_labels <= n_samples - 1
+    if((len(set(predicted_labels))> 1) and (len(set(predicted_labels))<= (min_samples - 1))):        
+        coefficient = metrics.silhouette_score(dataTransformed, clustering_model.labels_ , sample_size=SILHOUETTE_SAMPLE_SIZE)
+    else:
+        coefficient = -1
+    
     clusters_uniques = set(list(predicted_labels))
-    cant = list(predicted_labels)
+    cant = list(predicted_labels)    
+    
     metricas_totales = []
     cantidad_cluster = {}
-    for item in clusters_uniques:
+    n_noise_porcentaje= 0.0
+    for item in clusters_uniques:        
         if(len(cant) != 0):
-            cantidad_cluster = {
-                "clusters": int(item),
-                "cantidad": cant.count(int(item)),
-                "porcentaje": float(cant.count(int(item))/len(cant))   
-                    }
-            metricas_totales.append(cantidad_cluster)
+             if(item != -1):
+                cantidad_cluster = {
+                    "clusters": int(item),
+                    "cantidad": cant.count(int(item)),
+                    "porcentaje": "{:.5f}".format(float(cant.count(int(item))/len(cant)))    
+                        }
+                metricas_totales.append(cantidad_cluster)
+             else:
+                 n_noise_porcentaje="{:.5f}".format(float(cant.count(int(item))/len(cant)))
         else:
             cantidad_cluster = {
                 "clusters": int(item),
@@ -112,27 +115,27 @@ def dbscan_model(eps, min_samples, query):
     result['metricas'] = { 
                 'n_clusters': n_clusters_,
                 'n_noise': n_noise_,
-                'Coefficient': coefficient
+                'Coefficient': "{:.5f}".format(coefficient),
+                'n_noise_porcentaje': n_noise_porcentaje
                  }
 
     ##############visualizacion de DBSCAN ##################
-#visualzing clusters
+    #visualzing clusters
 
     dataTransformed['cluster']=predicted_labels
-
-    clusters = dataTransformed['cluster'].apply(lambda x: 'cluster ' +str(x+1) if x != -1 else 'outlier')
+    
+    clusters = dataTransformed['cluster'].apply(lambda x: 'cluster ' +str(x) if x != -1 else 'outlier')
     numero_clusters= len(set(clusters))
     ##print(numero_clusters)
     XX=dataTransformed.iloc[:,[0,1]].values
 
     plt.figure(figsize=(13,10))
-
-    
+            
     for i in range(numero_clusters):
         if (i-1) != -1:
             plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, cmap='Paired', label = clusters.unique())
         else:
-            plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=80, c='Grey', label = clusters.unique())
+            plt.scatter(XX[predicted_labels== (i-1), 0], XX[predicted_labels==(i-1), 1], s=50, c='Grey', label = clusters.unique())           
 
 
     plt.legend(clusters.unique(),bbox_to_anchor=(0.99,1),fontsize=12)
@@ -152,7 +155,7 @@ def dbscan_model(eps, min_samples, query):
     result["graphic_dbscan"] = my_base64_jpgData.decode()
 
     plt.figure(clear=True) 
-    result["graphic_method_codo"] = show_codo(dataTransformed)
+    result["graphic_method_codo"] =''#show_codo(dataTransformed)
 
     result["numColumn"] = list(data.columns.values)
     #print("cabecera", list(data.columns.values))
@@ -160,8 +163,8 @@ def dbscan_model(eps, min_samples, query):
 
     #print("Este es mi otro comentario", result)
     
-    print("colum", result['numColumn'])
-    print(result['data'])
+    #print("colum", result['numColumn'])
+    #print(result['data'])
 
     return result
 
