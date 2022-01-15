@@ -88,7 +88,7 @@ def dbscan_model(eps, min_samples, query):
     for item in clusters_uniques:        
         if(len(cant) != 0):
             if(item != -1):
-                porcentaje = round(float(cant.count(int(item))/len(cant)),5)
+                porcentaje = "{:.5f}".format(float(cant.count(int(item))/len(cant)))
                 cantidad_cluster = {
                     "clusters": int(item),
                     "cantidad": cant.count(int(item)),
