@@ -169,4 +169,3 @@ def dbscan_model(eps, min_samples, query):
 
     return result
 
-
